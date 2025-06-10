@@ -1,13 +1,20 @@
-# utils/recommend_crop.py
-import pickle
-import os
+    import pickle
+    import os
 
-# Load model
-model_path = os.path.join("model", "crop_predictor.pkl")
-with open(model_path, "rb") as f:
-    model = pickle.load(f)
+    # Load model
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # Get absolute path to project root
+    model_path = os.path.join(PROJECT_ROOT, "model", "crop_predictor.pkl")
 
-def recommend_crop(features):
-    # features should be a list: [N, P, K, temperature, humidity, ph, rainfall]
-    prediction = model.predict([features])
-    return prediction[0]
+    print(f"Attempting to load model from: {model_path}")  # DEBUG
+    print(f"Model file exists: {os.path.exists(model_path)}")  # DEBUG
+
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found at: {model_path}")
+
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+
+    def recommend_crop(features):
+        prediction = model.predict([features])
+        return prediction[0]
+    
